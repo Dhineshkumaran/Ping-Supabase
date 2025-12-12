@@ -1,0 +1,14 @@
+{
+  "name": "supabase-ping-cron",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "ping.js",
+  "scripts": {
+    "start": "node ping.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "axios": "^1.6.0",
+    "node-cron": "^3.0.2"
+  }
+}
