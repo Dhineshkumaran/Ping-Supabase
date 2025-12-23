@@ -1,16 +1,24 @@
+import express from "express";
 import cron from "node-cron";
 import { createClient } from "@supabase/supabase-js";
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_KEY
 );
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 async function pingDB() {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("gallery_images")
-    .select("*")          
-    .limit(1);           
+    .select("id")
+    .limit(1);
 
   if (error) {
     console.error("DB select failed:", error.message);
@@ -19,7 +27,8 @@ async function pingDB() {
   }
 }
 
-// Run twice a week — Monday & Thursday at 10AM
-cron.schedule("0 10 * * MON,THU", pingDB);
+cron.schedule("0 10 * * 1,4", pingDB);
 
-console.log("Supabase DB ping scheduled...");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
